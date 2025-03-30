@@ -15,20 +15,21 @@ const mealCategoryToCocktailIngredient = {
     Vegan: "Rom"
 };
 
-function init() {
-  fetchRandomMeal()
-    .then((meal) => {
-      displayMealData(meal);
-      const spirit = mapMealCategoryToDrinkIngredient(meal.strCategory);
-      return fetchCocktailByDrinkIngredient(spirit);
-    })
-    .then((cocktail) => {
-      displayCocktailData(cocktail);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
+ function init() {
+    fetchRandomMeal()
+          .then(function(meal) {
+              displayMealData(meal);
+              const spirit = mapMealCategoryToDrinkIngredient(meal.strCategory);
+              console.log("Matchende drikkeingrediens:", spirit);
+              return fetchCocktailByDrinkIngredient(spirit);
+          })
+          .then(function(cocktail) {
+              displayCocktailData(cocktail);
+          })
+          .catch(function(error) {
+              console.error("Error i init-funksjonen:", error);
+          });
+  }
 
 document.getElementById("getMeal").addEventListener("click", function () {
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
