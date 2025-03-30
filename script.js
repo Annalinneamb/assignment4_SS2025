@@ -1,19 +1,19 @@
 const mealCategoryToCocktailIngredient = {
-    Biff: "Whiskey",
-    Kylling: "Vodka",
-    Sjømat: "Rom",
-    Vegetar: "Gin",
-    Pasta: "Vin",
-    Dessert: "Baileys",
-    Lam: "Vodka",
-    Diverse: "Vodka",
-    Svin: "Tequila",
-    Tilbehør: "Brandy",
-    Forrett: "Rom",
-    Frokost: "Vodka",
-    Geit: "Whiskey",
-    Vegan: "Rom"
-};
+    Beef: "whiskey",
+    Chicken: "gin",
+    Dessert: "amaretto",
+    Lamb: "vodka",
+    Miscellaneous: "vodka",
+    Pasta: "tequila",
+    Pork: "tequila",
+    Seafood: "rum",
+    Side: "brandy",
+    Starter: "rum",
+    Vegetarian: "gin",
+    Breakfast: "vodka",
+    Goat: "whiskey",
+    Vegan: "rum",
+  };
 
  function init() {
     fetchRandomMeal()
