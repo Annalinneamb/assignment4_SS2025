@@ -1,15 +1,10 @@
 document.getElementById("getMeal").addEventListener("click", function () {
-    // Send a GET request to the API for a random meal
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        .then(response => response.json())  // Parse the JSON response
+        .then(response => response.json())
         .then(data => {
-            // Log the full data to the console to explore the structure
             console.log(data);
-
-            // Extract the meal data
             const meal = data.meals[0];
 
-            // Create an array of ingredients and their measures
             let ingredientsList = [];
             for (let i = 1; i <= 20; i++) {
                 const ingredient = meal[`strIngredient${i}`];
@@ -19,7 +14,6 @@ document.getElementById("getMeal").addEventListener("click", function () {
                 }
             }
 
-            // Populate the HTML with meal details
             document.getElementById("mealContainer").innerHTML = `
                 <h2>${meal.strMeal}</h2>
                 <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
@@ -30,7 +24,70 @@ document.getElementById("getMeal").addEventListener("click", function () {
                 </ul>
                 <p><strong>Instructions:</strong></p>
                 <p>${meal.strInstructions}</p>
+                <div id="cocktailContainer"></div>
+            `;
+
+            fetchMatchingCocktail(meal.strCategory);
+        })
+        .catch(error => console.error("Error fetching meal:", error));
+});
+
+const mealCategoryToCocktailIngredient = {
+    "Beef": "Whiskey",
+    "Chicken": "Vodka",
+    "Seafood": "Rum",
+    "Vegetarian": "Gin",
+    "Pasta": "Wine",
+    "Dessert": "Baileys"
+};
+
+function mapMealCategoryToDrinkIngredient(category) {
+    return mealCategoryToCocktailIngredient[category] || "Vodka";
+}
+
+function fetchMatchingCocktail(mealCategory) {
+    const drinkIngredient = mapMealCategoryToDrinkIngredient(mealCategory);
+
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drinkIngredient}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.drinks) {
+                return data.drinks[Math.floor(Math.random() * data.drinks.length)];
+            } else {
+                return fetch("https://www.thecocktaildb.com/api/json/v1/1/random.php")
+                    .then(response => response.json())
+                    .then(randomData => randomData.drinks[0]);
+            }
+        })
+        .then(cocktail => {
+            if (!cocktail) {
+                console.error("No cocktail data found.");
+                document.getElementById("cocktailContainer").innerHTML = `<p>No cocktail found.</p>`;
+                return;
+            }
+
+            let cocktailIngredients = [];
+            for (let i = 1; i <= 15; i++) {
+                const ingredient = cocktail[`strIngredient${i}`];
+                const measure = cocktail[`strMeasure${i}`];
+                if (ingredient && ingredient !== "") {
+                    cocktailIngredients.push(`${ingredient}: ${measure || ''}`);
+                }
+            }
+
+            document.getElementById("cocktailContainer").innerHTML = `
+                <h2>Suggested Cocktail: ${cocktail.strDrink}</h2>
+                <img src="${cocktail.strDrinkThumb}" alt="${cocktail.strDrink}">
+                <h3>Ingredients:</h3>
+                <ul>
+                    ${cocktailIngredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                </ul>
+                <p><strong>Instructions:</strong></p>
+                <p>${cocktail.strInstructions}</p>
             `;
         })
-        .catch(error => console.error("Error fetching meal:", error));  // Handle errors
-});
+        .catch(error => {
+            console.error("Error fetching cocktail:", error);
+            document.getElementById("cocktailContainer").innerHTML = `<p>Something went wrong while fetching the cocktail.</p>`;
+        });
+}

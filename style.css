@@ -1,12 +1,41 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+    background: linear-gradient(135deg, #fae258, #f2981a, #ff4757);
+    color: #333;
+    padding: 20px;
+}
+h1 {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 button {
-    background: rgb(149, 182, 230);
-    color: rgb(0, 0, 0);
-    padding: 20px;
+    background: #f5726d;
+    color: white;
+    padding: 15px 25px;
     border: none;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 30px;
+    font-size: 18px;
+    transition: 0.3s;
+}
+button:hover {
+    background: #f28b94;
+}
+#mealContainer, #cocktailContainer {
+    background: rgb(253, 245, 134);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    margin-top: 20px;
+}
+img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+ul {
+    list-style-position: inside;
+    padding: 0;
+    text-align: left;
+    display: inline-block;
 }
