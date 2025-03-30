@@ -72,9 +72,82 @@ function displayMealData(meal) {
 
 
   function mapMealCategoryToDrinkIngredient(category) {
-    if (!category) return "cola";
-    return mealCategoryToCocktailIngredient[category] || "cola";
+    if (!category) return "Cola";
+    return mealCategoryToCocktailIngredient[category] || "Cola";
   }
+
+
+function fetchCocktailByDrinkIngredient(drinkIngredient) {
+    console.log("Henter cocktail for:", drinkIngredient);
+      const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(drinkIngredient)}`;
+      return fetch(url)
+          
+          .then(function(response) {
+              return response.json();
+          })
+          
+          .then(function(data) {
+              if (data.drinks && data.drinks.length > 0) {
+                  console.log("Fant cocktail:", data.drinks[0]);
+                  return data.drinks[0];
+              } else {
+                  console.log("Ingen match, henter tilfeldig cocktail");
+                  return fetchRandomCocktail();
+              }
+          })
+          
+          .catch(function(error) {
+              console.error("Feil ved henting av cocktail:", error);
+              return fetchRandomCocktail();
+          });
+  }
+
+ function fetchRandomCocktail() {
+    console.log("Henter en tilfeldig cocktail");
+      return fetch("https://www.thecocktaildb.com/api/json/v1/1/random.php")
+          
+          .then(function(response) {
+              return response.json();
+          })
+          
+          .then(function(data) {
+              console.log("Data for tilfeldig cocktail:", data);
+              return data.drinks[0];
+          })
+          
+          .catch(function(error) {
+              console.error("Kunne ikke hente tilfeldig cocktail:", error);
+          });
+  }
+
+
+function displayCocktailData(cocktail) {
+    if (!cocktail) {
+      console.error("Vi fant ingen cocktaildata");
+      return;
+  }
+  
+  document.getElementById("drinkimg").src = cocktail.strDrinkThumb;
+  document.getElementById("cname").textContent = cocktail.strDrink;
+  document.getElementById("cCategory").textContent = "Category: " + (cocktail.strCategory || "Unknown");
+  
+  let ingredientList = document.getElementById("cIngredients");
+  ingredientList.innerHTML = "";
+  for (let i = 1; i <= 15; i++) {
+      let ingredient = cocktail["strIngredient" + i];
+      let measure = cocktail["strMeasure" + i];
+      if (!ingredient || ingredient.trim() === "") {
+          break;
+      }
+  
+      const li = document.createElement("li");
+      li.textContent = (measure ? measure + " " : "") + ingredient;
+      ingredientList.appendChild(li);
+  }
+  }
+  
+  window.onload = init;
+
 
 document.getElementById("getMeal").addEventListener("click", function () {
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
