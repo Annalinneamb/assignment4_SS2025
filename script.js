@@ -38,12 +38,13 @@ function fetchRandomMeal() {
             return response.json();
         })
         .then(function(data) {
-                  console.log("Måltids-API fungerer:", data);
-                  let meal = data.meals[0];
-                  return meal; // Returnerer måltidsobjektet
-              })
-    
-    
+        console.log("Måltids-API fungerer:", data);
+        let meal = data.meals[0];
+        return meal;
+        })
+        .catch(function(error) {
+            console.error("Feil ved henting av måltid:", error);
+          });
 }
 
 document.getElementById("getMeal").addEventListener("click", function () {
