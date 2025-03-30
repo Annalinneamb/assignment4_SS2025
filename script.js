@@ -33,7 +33,8 @@ const mealCategoryToCocktailIngredient = {
 
 
 function fetchRandomMeal() {
-    // Fill in
+       return fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+    
 }
 
 document.getElementById("getMeal").addEventListener("click", function () {
