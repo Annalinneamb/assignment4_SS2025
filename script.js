@@ -31,6 +31,11 @@ const mealCategoryToCocktailIngredient = {
           });
   }
 
+
+function fetchRandomMeal() {
+    // Fill in
+}
+
 document.getElementById("getMeal").addEventListener("click", function () {
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
         .then(response => response.json())
