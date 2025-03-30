@@ -1,3 +1,20 @@
+const mealCategoryToCocktailIngredient = {
+    Biff: "Whiskey",
+    Kylling: "Vodka",
+    Sjømat: "Rom",
+    Vegetar: "Gin",
+    Pasta: "Vin",
+    Dessert: "Baileys",
+    Lam: "Vodka",
+    Diverse: "Vodka",
+    Svin: "Tequila",
+    Tilbehør: "Brandy",
+    Forrett: "Rom",
+    Frokost: "Vodka",
+    Geit: "Whiskey",
+    Vegan: "Rom"
+};
+
 document.getElementById("getMeal").addEventListener("click", function () {
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
         .then(response => response.json())
