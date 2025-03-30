@@ -37,6 +37,11 @@ function fetchRandomMeal() {
         .then(function(response) {
             return response.json();
         })
+        .then(function(data) {
+                  console.log("Måltids-API fungerer:", data);
+                  let meal = data.meals[0];
+                  return meal; // Returnerer måltidsobjektet
+              })
     
     
 }
