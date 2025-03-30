@@ -47,6 +47,35 @@ function fetchRandomMeal() {
           });
 }
 
+function displayMealData(meal) {
+      document.getElementById("img").src = meal.strMealThumb;
+      document.getElementById("MealName").textContent = meal.strMeal;
+      document.getElementById("category").textContent = "Category: " + meal.strCategory;
+    
+      let ingredientList = document.getElementById("ingredients");
+      for ( let i = 1; i <= 20; i++){
+        let ingredient = meal["strIngredient" + i];
+        let measure = meal["strMeasure" + i];
+  
+        if (!ingredient || ingredient.trim() === "") { 
+          break; 
+        }
+        else {
+          const li = document.createElement("li");
+      
+          li.textContent = measure + " " + ingredient;
+          ingredientList.appendChild(li);
+        }}
+    
+        document.getElementById("instructions").textContent = meal.strInstructions
+  }
+
+
+  function mapMealCategoryToDrinkIngredient(category) {
+    if (!category) return "cola";
+    return mealCategoryToCocktailIngredient[category] || "cola";
+  }
+
 document.getElementById("getMeal").addEventListener("click", function () {
     fetch("https://www.themealdb.com/api/json/v1/1/random.php")
         .then(response => response.json())
