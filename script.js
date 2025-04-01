@@ -48,27 +48,30 @@ function fetchRandomMeal() {
 }
 
 function displayMealData(meal) {
-      document.getElementById("img").src = meal.strMealThumb;
-      document.getElementById("MealName").textContent = meal.strMeal;
-      document.getElementById("category").textContent = "Category: " + meal.strCategory;
-    
-      let ingredientList = document.getElementById("ingredients");
-      for ( let i = 1; i <= 20; i++){
-        let ingredient = meal["strIngredient" + i];
-        let measure = meal["strMeasure" + i];
+    document.getElementById("img").src = meal.strMealThumb;
+    document.getElementById("MealName").textContent = meal.strMeal;
+    document.getElementById("category").textContent = "Category: " + meal.strCategory;
   
-        if (!ingredient || ingredient.trim() === "") { 
-          break; 
-        }
-        else {
-          const li = document.createElement("li");
-      
-          li.textContent = measure + " " + ingredient;
-          ingredientList.appendChild(li);
-        }}
+    // Clear the ingredients list before adding new ingredients
+    let ingredientList = document.getElementById("ingredients");
+    ingredientList.innerHTML = "";
     
-        document.getElementById("instructions").textContent = meal.strInstructions
-  }
+    for (let i = 1; i <= 20; i++) {
+      let ingredient = meal["strIngredient" + i];
+      let measure = meal["strMeasure" + i];
+
+      if (!ingredient || ingredient.trim() === "") { 
+        break; 
+      }
+      else {
+        const li = document.createElement("li");
+    
+        li.textContent = measure + " " + ingredient;
+        ingredientList.appendChild(li);
+      }}
+  
+      document.getElementById("instructions").textContent = meal.strInstructions
+}
 
 
   function mapMealCategoryToDrinkIngredient(category) {
@@ -149,49 +152,23 @@ function displayCocktailData(cocktail) {
   window.onload = init;
 
 
-document.getElementById("getMeal").addEventListener("click", function () {
-    fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            const meal = data.meals[0];
-
-            let ingredientsList = [];
-            for (let i = 1; i <= 20; i++) {
-                const ingredient = meal[`strIngredient${i}`];
-                const measure = meal[`strMeasure${i}`];
-                if (ingredient && ingredient !== "") {
-                    ingredientsList.push(`${ingredient}: ${measure}`);
-                }
-            }
-
-            document.getElementById("mealContainer").innerHTML = `
-                <h2>${meal.strMeal}</h2>
-                <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
-                <p><strong>Category:</strong> ${meal.strCategory}</p>
-                <h3>Ingredients:</h3>
-                <ul>
-                    ${ingredientsList.map(ingredient => `<li>${ingredient}</li>`).join('')}
-                </ul>
-                <p><strong>Instructions:</strong></p>
-                <p>${meal.strInstructions}</p>
-                <div id="cocktailContainer"></div>
-            `;
-
-            fetchMatchingCocktail(meal.strCategory);
+  document.getElementById("getMeal").addEventListener("click", function () {
+    fetchRandomMeal()
+        .then(function(meal) {
+            displayMealData(meal);
+            const spirit = mapMealCategoryToDrinkIngredient(meal.strCategory);
+            console.log("Matchende drikkeingrediens:", spirit);
+            return fetchCocktailByDrinkIngredient(spirit);
         })
-        .catch(error => console.error("Error fetching meal:", error));
+        .then(function(cocktail) {
+            displayCocktailData(cocktail);
+        })
+        .catch(function(error) {
+            console.error("Error i init-funksjonen:", error);
+        });
 });
 
-const mealCategoryToCocktailIngredient = {
-    "Beef": "Whiskey",
-    "Chicken": "Vodka",
-    "Seafood": "Rum",
-    "Vegetarian": "Gin",
-    "Pasta": "Wine",
-    "Dessert": "Baileys"
-};
-
+// Remove or comment out the duplicate event listener code below this
 function mapMealCategoryToDrinkIngredient(category) {
     return mealCategoryToCocktailIngredient[category] || "Vodka";
 }
